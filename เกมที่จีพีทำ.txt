@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>เกมต่อสู้ 2 คนโคตรสวย</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #1e3c72, #2a5298);
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  h1 { margin-top: 20px; font-size: 3em; text-shadow: 2px 2px #000; }
+
+  .arena {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    margin-top: 50px;
+    background: url('https://images.unsplash.com/photo-1606788075761-8f5a8b0b8c7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center/cover;
+  }
+
+  .player {
+    position: absolute;
+    bottom: 0;
+    width: 120px;
+    height: 120px;
+    background-size: cover;
+    transition: transform 0.3s;
+  }
+
+  #player1 { left: 100px; background-image: url('https://i.ibb.co/2dF8k0s/character1.png'); }
+  #player2 { right: 100px; background-image: url('https://i.ibb.co/w4YcRz0/character2.png'); }
+
+  .hp-bar {
+    width: 200px;
+    height: 20px;
+    border: 2px solid #fff;
+    margin: 10px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #333;
+  }
+
+  .hp-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to right, #0f0, #f00);
+    transition: width 0.5s;
+  }
+
+  .buttons {
+    margin-top: 20px;
+  }
+
+  button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  button:hover { transform: scale(1.1); }
+
+  .log {
+    margin-top: 20px;
+    background: rgba(0,0,0,0.6);
+    padding: 15px;
+    height: 150px;
+    overflow-y: auto;
+    border-radius: 10px;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .attack-effect {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, yellow 0%, orange 80%, red 100%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: explode 0.5s forwards;
+  }
+
+  @keyframes explode {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<h1> เกมต่อสู้ </h1>
+
+<div class="hp-bar">
+  <div id="hpFill1" class="hp-fill"></div>
+</div>
+<div class="hp-bar">
+  <div id="hpFill2" class="hp-fill"></div>
+</div>
+
+<div class="arena">
+  <div id="player1" class="player"></div>
+  <div id="player2" class="player"></div>
+</div>
+
+<div class="buttons">
+  <button onclick="attack(1)">Player 1 โจมตี</button>
+  <button onclick="attack(2)">Player 2 โจมตี</button>
+</div>
+
+<div class="log" id="log"></div>
+
+<script>
+let hp1 = 100;
+let hp2 = 100;
+
+function attack(player) {
+  let damage = Math.floor(Math.random() * 20) + 10;
+  let log = document.getElementById('log');
+
+  // เอฟเฟกต์โจมตี
+  let effect = document.createElement('div');
+  effect.classList.add('attack-effect');
+  if(player === 1){
+    effect.style.left = '200px';
+    effect.style.bottom = '100px';
+  } else {
+    effect.style.right = '200px';
+    effect.style.bottom = '100px';
+  }
+  document.body.appendChild(effect);
+  setTimeout(() => effect.remove(), 500);
+
+  if(player === 1){
+    hp2 -= damage;
+    if(hp2 < 0) hp2 = 0;
+    document.getElementById('hpFill2').style.width = hp2 + '%';
+    log.innerHTML += `Player 1 โจมตี Player 2 ทำ ${damage} HP<br>`;
+    if(hp2 === 0) log.innerHTML += "<b>Player 1 ชนะ!</b><br>";
+  } else {
+    hp1 -= damage;
+    if(hp1 < 0) hp1 = 0;
+    document.getElementById('hpFill1').style.width = hp1 + '%';
+    log.innerHTML += `Player 2 โจมตี Player 1 ทำ ${damage} HP<br>`;
+    if(hp1 === 0) log.innerHTML += "<b>Player 2 ชนะ!</b><br>";
+  }
+
+  log.scrollTop = log.scrollHeight;
+}
+</script>
+
+</body>
+</html>
